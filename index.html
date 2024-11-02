@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node Investment Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .slider-container { margin: 20px 0; }
+    .slider-container label { display: block; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Node Investment Calculator</h1>
+
+  <div class="slider-container">
+    <label for="price">3ULL Price (USD): <span id="priceValue"></span></label>
+    <input type="range" id="price" min="0.001" max="1" step="0.001" value="0.01" oninput="updateValue('price')">
+  </div>
+
+  <div class="slider-container">
+    <label for="nodesSold">Number of Nodes Sold: <span id="nodesSoldValue"></span></label>
+    <input type="range" id="nodesSold" min="1" max="50000" step="1" value="10000" oninput="updateValue('nodesSold')">
+  </div>
+
+  <div class="slider-container">
+    <label for="nodesOwned">Your Nodes: <span id="nodesOwnedValue"></span></label>
+    <input type="range" id="nodesOwned" min="1" max="100" step="1" value="5" oninput="updateValue('nodesOwned')">
+  </div>
+
+  <script>
+    function updateValue(id) {
+      var value = document.getElementById(id).value;
+      document.getElementById(id + 'Value').innerText = value;
+      calculateRevenue();
+    }
+
+    function calculateRevenue() {
+      var price = parseFloat(document.getElementById('price').value);
+      var nodesSold = parseInt(document.getElementById('nodesSold').value);
+      var nodesOwned = parseInt(document.getElementById('nodesOwned').value);
+      var dailyEmissionsTotal = 13698630;
+      var emissionsPerNode = (dailyEmissionsTotal / 2) / nodesSold;
+      var dailyRevenuePerNode = emissionsPerNode * price;
+      var dailyRevenue = dailyRevenuePerNode * nodesOwned;
+
+      // Update calculations in the webpage
+      document.getElementById('dailyRevenue').innerText = dailyRevenue.toFixed(2);
+      document.getElementById('weeklyRevenue').innerText = (dailyRevenue * 7).toFixed(2);
+      document.getElementById('monthlyRevenue').innerText = (dailyRevenue * 30).toFixed(2);
+      document.getElementById('yearlyRevenue').innerText = (dailyRevenue * 365).toFixed(2);
+    }
+
+    // Initialize values
+    window.onload = function() {
+      updateValue('price');
+      updateValue('nodesSold');
+      updateValue('nodesOwned');
+    }
+  </script>
+
+  <h2>Revenue Calculations</h2>
+  <p>Daily Revenue: $<span id="dailyRevenue"></span></p>
+  <p>Weekly Revenue: $<span id="weeklyRevenue"></span></p>
+  <p>Monthly Revenue: $<span id="monthlyRevenue"></span></p>
+  <p>Yearly Revenue: $<span id="yearlyRevenue"></span></p>
+</body>
+</html>
