@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,11 +59,6 @@
     </div>
     <h3>Test Total 3ULL Value: $<span id="total3ullValue">1,250,000.00</span></h3>
 
-    <div class="slider-container">
-      <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
-      <input type="range" id="marketplaceVolume" min="0" max="1000000" step="10000" value="500000" oninput="updateValue('marketplaceVolume')">
-    </div>
-
     <h2>Revenue Calculations</h2>
     <p>Total Daily Emissions: <span id="dailyEmissionsTotal">6,849,315</span></p>
     <p>3ULL Emissions per Node: <span id="emissionsPerNode">136.9863</span></p>
@@ -76,6 +72,10 @@
     </div>
 
     <h2>NFT Marketplace Impact</h2>
+    <div class="slider-container">
+      <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
+      <input type="range" id="marketplaceVolume" min="0" max="1000000" step="10000" value="500000" oninput="updateValue('marketplaceVolume')">
+    </div>
     <div class="emissions-values">
       <div>Daily Volume: <span id="dailyVolume">500,000</span></div>
       <div>Weekly Volume: <span id="weeklyVolume">3,500,000</span></div>
