@@ -51,10 +51,12 @@
       <input type="range" id="nodesOwned" min="1" max="100" step="1" value="5" oninput="updateValue('nodesOwned')">
     </div>
 
+    <h2>Current Holdings Value</h2>
     <div class="slider-container">
       <label for="current3ull">Your Current 3ULL: <span id="current3ullValue">25000000</span></label>
-      <input type="range" id="current3ull" min="0" max="100000000" step="100000" value="25000000" oninput="updateValue('current3ull')">
+      <input type="range" id="current3ull" min="0" max="50000000" step="100000" value="25000000" oninput="updateValue('current3ull')">
     </div>
+    <h3>Test Total 3ULL Value: $<span id="total3ullValue">1,250,000.00</span></h3>
 
     <div class="slider-container">
       <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
@@ -106,6 +108,7 @@
       var emissionsPerNode = dailyEmissionsTotal / nodesSold;
       var dailyRevenuePerNode = emissionsPerNode * price;
       var dailyRevenue = dailyRevenuePerNode * nodesOwned;
+      var total3ullValue = current3ull * price;
       var burnRate = 0.1; // Assuming a 10% burn rate
 
       // Revenue calculations
@@ -116,6 +119,7 @@
       document.getElementById('weeklyRevenue').innerText = (dailyRevenue * 7).toFixed(2);
       document.getElementById('monthlyRevenue').innerText = (dailyRevenue * 30).toFixed(2);
       document.getElementById('yearlyRevenue').innerText = (dailyRevenue * 365).toFixed(2);
+      document.getElementById('total3ullValue').innerText = total3ullValue.toFixed(2);
 
       // Volume calculations
       document.getElementById('dailyVolume').innerText = marketplaceVolume.toLocaleString();
