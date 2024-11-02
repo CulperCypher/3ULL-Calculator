@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,10 +71,6 @@
     </div>
 
     <h2>NFT Marketplace Impact</h2>
-    <div class="slider-container">
-      <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
-      <input type="range" id="marketplaceVolume" min="0" max="1000000" step="10000" value="500000" oninput="updateValue('marketplaceVolume')">
-    </div>
     <div class="emissions-values">
       <div>Daily Volume: <span id="dailyVolume">500,000</span></div>
       <div>Weekly Volume: <span id="weeklyVolume">3,500,000</span></div>
@@ -88,6 +83,12 @@
       <div>Weekly Burn: <span id="weeklyBurn">350,000</span></div>
       <div>Monthly Burn: <span id="monthlyBurn">1,500,000</span></div>
       <div>Yearly Burn: <span id="yearlyBurn">18,250,000</span></div>
+    </div>
+
+    <!-- NFT Marketplace Volume Slider Moved to Bottom -->
+    <div class="slider-container">
+      <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
+      <input type="range" id="marketplaceVolume" min="0" max="1000000" step="10000" value="500000" oninput="updateValue('marketplaceVolume')">
     </div>
   </div>
 
