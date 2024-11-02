@@ -26,6 +26,11 @@
       width: 100%;
       height: 30px;
     }
+    .emissions-values {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -46,19 +51,42 @@
       <input type="range" id="nodesOwned" min="1" max="100" step="1" value="5" oninput="updateValue('nodesOwned')">
     </div>
 
+    <div class="slider-container">
+      <label for="current3ull">Your Current 3ULL: <span id="current3ullValue">25000000</span></label>
+      <input type="range" id="current3ull" min="0" max="100000000" step="100000" value="25000000" oninput="updateValue('current3ull')">
+    </div>
+
+    <div class="slider-container">
+      <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
+      <input type="range" id="marketplaceVolume" min="0" max="1000000" step="10000" value="500000" oninput="updateValue('marketplaceVolume')">
+    </div>
+
     <h2>Revenue Calculations</h2>
-    <p>Your Current 3ULL: <span id="current3ull">25,000,000</span></p>
     <p>Total Daily Emissions: <span id="dailyEmissionsTotal">6,849,315</span></p>
     <p>3ULL Emissions per Node: <span id="emissionsPerNode">136.9863</span></p>
-    <p>Total $ Value Emissions Per Node: $<span id="totalValueEmissionsPerNode">6.85</span></p>
-    <p>Daily Revenue: $<span id="dailyRevenue">34.25</span></p>
-    <p>Weekly Revenue: $<span id="weeklyRevenue">239.73</span></p>
-    <p>Monthly Revenue: $<span id="monthlyRevenue">1,027.40</span></p>
-    <p>Yearly Revenue: $<span id="yearlyRevenue">12,500.00</span></p>
+    <p>Daily Emissions Value per Node: $<span id="totalValueEmissionsPerNode">6.85</span></p>
+    
+    <div class="emissions-values">
+      <div>Daily Emissions Value: $<span id="dailyRevenue">34.25</span></div>
+      <div>Weekly Emissions Value: $<span id="weeklyRevenue">239.73</span></div>
+      <div>Monthly Emissions Value: $<span id="monthlyRevenue">1,027.40</span></div>
+      <div>Yearly Emissions Value: $<span id="yearlyRevenue">12,500.00</span></div>
+    </div>
 
-    <h2>NFT Marketplace</h2>
-    <p>Volume: <span id="marketplaceVolume">500,000</span></p>
-    <p>Deflationary Impact: <span id="deflationaryImpact">50,000</span></p>
+    <h2>NFT Marketplace Impact</h2>
+    <div class="emissions-values">
+      <div>Daily Volume: <span id="dailyVolume">500,000</span></div>
+      <div>Weekly Volume: <span id="weeklyVolume">3,500,000</span></div>
+      <div>Monthly Volume: <span id="monthlyVolume">15,000,000</span></div>
+      <div>Yearly Volume: <span id="yearlyVolume">182,500,000</span></div>
+    </div>
+
+    <div class="emissions-values">
+      <div>Daily Burn: <span id="dailyBurn">50,000</span></div>
+      <div>Weekly Burn: <span id="weeklyBurn">350,000</span></div>
+      <div>Monthly Burn: <span id="monthlyBurn">1,500,000</span></div>
+      <div>Yearly Burn: <span id="yearlyBurn">18,250,000</span></div>
+    </div>
   </div>
 
   <script>
@@ -72,11 +100,15 @@
       var price = parseFloat(document.getElementById('price').value);
       var nodesSold = parseInt(document.getElementById('nodesSold').value);
       var nodesOwned = parseInt(document.getElementById('nodesOwned').value);
+      var current3ull = parseInt(document.getElementById('current3ull').value);
+      var marketplaceVolume = parseInt(document.getElementById('marketplaceVolume').value);
       var dailyEmissionsTotal = 6849315;
       var emissionsPerNode = dailyEmissionsTotal / nodesSold;
       var dailyRevenuePerNode = emissionsPerNode * price;
       var dailyRevenue = dailyRevenuePerNode * nodesOwned;
+      var burnRate = 0.1; // Assuming a 10% burn rate
 
+      // Revenue calculations
       document.getElementById('dailyEmissionsTotal').innerText = dailyEmissionsTotal.toLocaleString();
       document.getElementById('emissionsPerNode').innerText = emissionsPerNode.toFixed(4);
       document.getElementById('totalValueEmissionsPerNode').innerText = (emissionsPerNode * price).toFixed(2);
@@ -84,14 +116,27 @@
       document.getElementById('weeklyRevenue').innerText = (dailyRevenue * 7).toFixed(2);
       document.getElementById('monthlyRevenue').innerText = (dailyRevenue * 30).toFixed(2);
       document.getElementById('yearlyRevenue').innerText = (dailyRevenue * 365).toFixed(2);
+
+      // Volume calculations
+      document.getElementById('dailyVolume').innerText = marketplaceVolume.toLocaleString();
+      document.getElementById('weeklyVolume').innerText = (marketplaceVolume * 7).toLocaleString();
+      document.getElementById('monthlyVolume').innerText = (marketplaceVolume * 30).toLocaleString();
+      document.getElementById('yearlyVolume').innerText = (marketplaceVolume * 365).toLocaleString();
+
+      // Burn calculations
+      document.getElementById('dailyBurn').innerText = (marketplaceVolume * burnRate).toLocaleString();
+      document.getElementById('weeklyBurn').innerText = (marketplaceVolume * 7 * burnRate).toLocaleString();
+      document.getElementById('monthlyBurn').innerText = (marketplaceVolume * 30 * burnRate).toLocaleString();
+      document.getElementById('yearlyBurn').innerText = (marketplaceVolume * 365 * burnRate).toLocaleString();
     }
 
     window.onload = function() {
       updateValue('price');
       updateValue('nodesSold');
       updateValue('nodesOwned');
+      updateValue('current3ull');
+      updateValue('marketplaceVolume');
     }
   </script>
 </body>
 </html>
-
