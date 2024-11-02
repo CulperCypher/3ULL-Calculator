@@ -5,27 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Node Investment Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; }
-    .slider-container { margin: 20px 0; }
-    .slider-container label { display: block; margin-bottom: 10px; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: limegreen;
+      text-align: center;
+    }
+    .container {
+      width: 50%;
+      margin: 0 auto;
+    }
+    .slider-container {
+      margin: 20px 0;
+    }
+    .slider-container label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 30px;
+    }
   </style>
 </head>
 <body>
   <h1>Node Investment Calculator</h1>
+  <div class="container">
+    <div class="slider-container">
+      <label for="price">3ULL Price (USD): <span id="priceValue">0.05</span></label>
+      <input type="range" id="price" min="0.001" max="1" step="0.001" value="0.05" oninput="updateValue('price')">
+    </div>
 
-  <div class="slider-container">
-    <label for="price">3ULL Price (USD): <span id="priceValue"></span></label>
-    <input type="range" id="price" min="0.001" max="1" step="0.001" value="0.01" oninput="updateValue('price')">
-  </div>
+    <div class="slider-container">
+      <label for="nodesSold">Number of Nodes Sold: <span id="nodesSoldValue">50000</span></label>
+      <input type="range" id="nodesSold" min="1" max="50000" step="1" value="50000" oninput="updateValue('nodesSold')">
+    </div>
 
-  <div class="slider-container">
-    <label for="nodesSold">Number of Nodes Sold: <span id="nodesSoldValue"></span></label>
-    <input type="range" id="nodesSold" min="1" max="50000" step="1" value="10000" oninput="updateValue('nodesSold')">
-  </div>
+    <div class="slider-container">
+      <label for="nodesOwned">Your Nodes: <span id="nodesOwnedValue">5</span></label>
+      <input type="range" id="nodesOwned" min="1" max="100" step="1" value="5" oninput="updateValue('nodesOwned')">
+    </div>
 
-  <div class="slider-container">
-    <label for="nodesOwned">Your Nodes: <span id="nodesOwnedValue"></span></label>
-    <input type="range" id="nodesOwned" min="1" max="100" step="1" value="5" oninput="updateValue('nodesOwned')">
+    <h2>Revenue Calculations</h2>
+    <p>Your Current 3ULL: <span id="current3ull">25,000,000</span></p>
+    <p>Total Daily Emissions: <span id="dailyEmissionsTotal">6,849,315</span></p>
+    <p>3ULL Emissions per Node: <span id="emissionsPerNode">136.9863</span></p>
+    <p>Total $ Value Emissions Per Node: $<span id="totalValueEmissionsPerNode">6.85</span></p>
+    <p>Daily Revenue: $<span id="dailyRevenue">34.25</span></p>
+    <p>Weekly Revenue: $<span id="weeklyRevenue">239.73</span></p>
+    <p>Monthly Revenue: $<span id="monthlyRevenue">1,027.40</span></p>
+    <p>Yearly Revenue: $<span id="yearlyRevenue">12,500.00</span></p>
+
+    <h2>NFT Marketplace</h2>
+    <p>Volume: <span id="marketplaceVolume">500,000</span></p>
+    <p>Deflationary Impact: <span id="deflationaryImpact">50,000</span></p>
   </div>
 
   <script>
@@ -39,30 +72,26 @@
       var price = parseFloat(document.getElementById('price').value);
       var nodesSold = parseInt(document.getElementById('nodesSold').value);
       var nodesOwned = parseInt(document.getElementById('nodesOwned').value);
-      var dailyEmissionsTotal = 13698630;
-      var emissionsPerNode = (dailyEmissionsTotal / 2) / nodesSold;
+      var dailyEmissionsTotal = 6849315;
+      var emissionsPerNode = dailyEmissionsTotal / nodesSold;
       var dailyRevenuePerNode = emissionsPerNode * price;
       var dailyRevenue = dailyRevenuePerNode * nodesOwned;
 
-      // Update calculations in the webpage
+      document.getElementById('dailyEmissionsTotal').innerText = dailyEmissionsTotal.toLocaleString();
+      document.getElementById('emissionsPerNode').innerText = emissionsPerNode.toFixed(4);
+      document.getElementById('totalValueEmissionsPerNode').innerText = (emissionsPerNode * price).toFixed(2);
       document.getElementById('dailyRevenue').innerText = dailyRevenue.toFixed(2);
       document.getElementById('weeklyRevenue').innerText = (dailyRevenue * 7).toFixed(2);
       document.getElementById('monthlyRevenue').innerText = (dailyRevenue * 30).toFixed(2);
       document.getElementById('yearlyRevenue').innerText = (dailyRevenue * 365).toFixed(2);
     }
 
-    // Initialize values
     window.onload = function() {
       updateValue('price');
       updateValue('nodesSold');
       updateValue('nodesOwned');
     }
   </script>
-
-  <h2>Revenue Calculations</h2>
-  <p>Daily Revenue: $<span id="dailyRevenue"></span></p>
-  <p>Weekly Revenue: $<span id="weeklyRevenue"></span></p>
-  <p>Monthly Revenue: $<span id="monthlyRevenue"></span></p>
-  <p>Yearly Revenue: $<span id="yearlyRevenue"></span></p>
 </body>
 </html>
+
