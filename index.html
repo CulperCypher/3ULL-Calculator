@@ -1,158 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3ULL Investment Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: black;
-      color: limegreen;
-      text-align: center;
-    }
-    .container {
-      width: 50%;
-      margin: 0 auto;
-    }
-    .slider-container {
-      margin: 20px 0;
-    }
-    .slider-container label {
-      display: block;
-      margin-bottom: 10px;
-    }
-    input[type="range"] {
-      width: 100%;
-      height: 30px;
-    }
-    .emissions-values {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-    .disclaimer {
-      font-size: 0.9em;
-      margin-top: 20px;
-      color: lightgray;
-    }
-  </style>
-  <div class="container">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3ULL Investment Calculator</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1b1f2b;
+            color: #d1d5db;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- 3ULL Price Slider at the Top -->
-    <div class="slider-container">
-      <label for="price">3ULL Price (USD): <span id="priceValue">0.05</span></label>
-      <input type="range" id="price" min="0.00100" max="1" step="0.00001" value="0.05" oninput="updateValue('price')">
+        /* Live Price Display */
+        #livePrice {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #2a2e3e;
+            padding: 10px;
+            border-radius: 5px;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #10b981;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #2a2e3e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #f0f6fc;
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            margin: 20px 0;
+            color: #9ca3af;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #1e293b;
+            color: #d1d5db;
+        }
+
+        input[type="range"] {
+            margin-top: 10px;
+        }
+
+        .emissions-values {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            color: #d1d5db;
+        }
+
+        .emissions-values div {
+            font-size: 1em;
+            margin: 10px 0;
+        }
+
+        .disclaimer {
+            font-size: 0.8em;
+            color: #9ca3af;
+            margin-top: 20px;
+        }
+
+        /* Button Style */
+        .calculate-button {
+            background: linear-gradient(90deg, #10b981, #22d3ee);
+            color: #fff;
+            font-size: 1em;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .calculate-button:hover {
+            background: linear-gradient(90deg, #22d3ee, #10b981);
+        }
+    </style>
+</head>
+<body>
+    <!-- Live Price Display -->
+    <div id="livePrice">Live 3ULL Price: $<span id="livePriceValue">...</span></div>
+
+    <div class="container">
+        <h1></h1>
+
+        <div class="card">
+            <div class="input-container">
+                <label for="price">3ULL Price (USD): <span id="priceValue">0.05</span></label>
+                <input type="number" id="price" min="0.0010" max="1" step="0.0001" value="0.05" oninput="updateValues()">
+                <input type="range" id="priceSlider" min="0.0010" max="1" step="0.0001" value="0.05" oninput="syncSlider('price', 'priceSlider')">
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Current Holdings Value</h2>
+            <div class="input-container">
+                <label for="current3ull">Your Current 3ULL: <span id="current3ullValue">25000000</span></label>
+                <input type="number" id="current3ull" min="0" max="50000000" step="10000" value="25000000" oninput="updateValues()">
+                <input type="range" id="current3ullSlider" min="0" max="50000000" step="10000" value="25000000" oninput="syncSlider('current3ull', 'current3ullSlider')">
+            </div>
+            <h3>Total 3ULL Value: $<span id="total3ullValue">1,250,000.00</span></h3>
+        </div>
+
+        <div class="card">
+            <div class="input-container">
+                <label for="nodesSold">Number of Nodes Sold: <span id="nodesSoldValue">50000</span></label>
+                <input type="number" id="nodesSold" min="1" max="50000" step="10" value="50000" oninput="updateValues()">
+                <input type="range" id="nodesSoldSlider" min="1" max="50000" step="10" value="50000" oninput="syncSlider('nodesSold', 'nodesSoldSlider')">
+            </div>
+            <div class="input-container">
+                <label for="nodesOwned">Your Nodes: <span id="nodesOwnedValue">5</span></label>
+                <input type="number" id="nodesOwned" min="0" max="100" step="1" value="5" oninput="updateValues()">
+                <input type="range" id="nodesOwnedSlider" min="0" max="100" step="1" value="5" oninput="syncSlider('nodesOwned', 'nodesOwnedSlider')">
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Revenue Calculations</h2>
+            <p>Total Daily Emissions: <span id="dailyEmissionsTotal">6,849,315</span></p>
+            <p>3ULL Emissions per Node: <span id="emissionsPerNode">136.9863</span></p>
+            <p>Daily Emissions Value per Node: $<span id="totalValueEmissionsPerNode">6.85</span></p>
+            <div class="emissions-values">
+                <div>Daily Emissions Value: $<span id="dailyRevenue">34.25</span></div>
+                <div>Weekly Emissions Value: $<span id="weeklyRevenue">239.73</span></div>
+                <div>Monthly Emissions Value: $<span id="monthlyRevenue">1,027.40</span></div>
+                <div>Yearly Emissions Value: $<span id="yearlyRevenue">12,500.00</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>NFT Marketplace Impact</h2>
+            <div class="emissions-values">
+                <div>Daily Volume: <span id="dailyVolume">500,000</span></div>
+                <div>Weekly Volume: <span id="weeklyVolume">3,500,000</span></div>
+                <div>Monthly Volume: <span id="monthlyVolume">15,000,000</span></div>
+                <div>Yearly Volume: <span id="yearlyVolume">182,500,000</span></div>
+            </div>
+            <div class="emissions-values">
+                <div>Daily Burn: <span id="dailyBurn">50,000</span></div>
+                <div>Weekly Burn: <span id="weeklyBurn">350,000</span></div>
+                <div>Monthly Burn: <span id="monthlyBurn">1,500,000</span></div>
+                <div>Yearly Burn: <span id="yearlyBurn">18,250,000</span></div>
+            </div>
+            <div class="input-container">
+                <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
+                <input type="number" id="marketplaceVolume" min="0" max="1000000" step="10000" value="500000" oninput="updateValues()">
+                <input type="range" id="marketplaceVolumeSlider" min="0" max="1000000" step="10000" value="500000" oninput="syncSlider('marketplaceVolume', 'marketplaceVolumeSlider')">
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p>Donations in support of the PLAYA3ULL Calculator can be sent to:</p>
+            <p><strong>0x65620BB0CCBB61C123DaBC58040aDD521653dc39</strong></p>
+        </div>
     </div>
 
-    <h2>Current Holdings Value</h2>
-    <div class="slider-container">
-      <label for="current3ull">Current 3ULL Balance: <span id="current3ullValue">25000000</span></label>
-      <input type="range" id="current3ull" min="0" max="50000000" step="10000" value="25000000" oninput="updateValue('current3ull')">
-    </div>
-    <h3>3ULL Value: $<span id="total3ullValue">1,250,000.00</span></h3>
-
-    <div class="slider-container">
-      <label for="nodesSold">Number of Nodes Sold: <span id="nodesSoldValue">50000</span></label>
-      <input type="range" id="nodesSold" min="o" max="50000" step="1" value="50000" oninput="updateValue('nodesSold')">
-    </div>
-
-    <div class="slider-container">
-      <label for="nodesOwned">Your Nodes: <span id="nodesOwnedValue">5</span></label>
-      <input type="range" id="nodesOwned" min="0" max="100" step="1" value="0" oninput="updateValue('nodesOwned')">
-    </div>
-
-    <h2>Revenue Calculations</h2>
-    <p>Total Daily Emissions: <span id="dailyEmissionsTotal">6,849,315</span></p>
-    <p>3ULL Emissions per Node: <span id="emissionsPerNode">136.9863</span></p>
-    <p>Daily Emissions Value per Node: $<span id="totalValueEmissionsPerNode">6.85</span></p>
+    <script>
+        // Function to fetch live price
+        async function fetchLivePrice() {
+            try {
+                const response = await fetch('https://api.dexscreener.com/latest/dex/tokens/0xa77e70d0Af1Ac7fF86726740dB1Bd065c3566937');
+                const data = await response.json();
+                const priceUsd = data.pairs[0].priceUsd;
+                document.getElementById("livePriceValue").innerText = parseFloat(priceUsd).toFixed(5);
+                document.getElementById("price").value = parseFloat(priceUsd).toFixed(5); // Sync with price input
+                updateValues();
+            } catch (error) {
+                console.error("Error fetching live price:", error);
+                document.getElementById("livePriceValue").innerText = "Error";
+            }
+        }
     
-    <div class="emissions-values">
-      <div>Daily Emissions Value: $<span id="dailyRevenue">34.25</span></div>
-      <div>Weekly Emissions Value: $<span id="weeklyRevenue">239.73</span></div>
-      <div>Monthly Emissions Value: $<span id="monthlyRevenue">1,027.40</span></div>
-      <div>Yearly Emissions Value: $<span id="yearlyRevenue">12,500.00</span></div>
-    </div>
-
-    <h2>NFT Marketplace Impact</h2>
-    <div class="emissions-values">
-      <div>Daily Volume: <span id="dailyVolume">500,000</span></div>
-      <div>Weekly Volume: <span id="weeklyVolume">3,500,000</span></div>
-      <div>Monthly Volume: <span id="monthlyVolume">15,000,000</span></div>
-      <div>Yearly Volume: <span id="yearlyVolume">182,500,000</span></div>
-    </div>
-
-    <div class="emissions-values">
-      <div>Daily Burn: <span id="dailyBurn">50,000</span></div>
-      <div>Weekly Burn: <span id="weeklyBurn">350,000</span></div>
-      <div>Monthly Burn: <span id="monthlyBurn">1,500,000</span></div>
-      <div>Yearly Burn: <span id="yearlyBurn">18,250,000</span></div>
-    </div>
-
-    <!-- NFT Marketplace Volume Slider at the Bottom -->
-    <div class="slider-container">
-      <label for="marketplaceVolume">NFT Marketplace Volume (Daily): <span id="marketplaceVolumeValue">500000</span></label>
-      <input type="range" id="marketplaceVolume" min="0" max="1000000" step="10000" value="500000" oninput="updateValue('marketplaceVolume')">
-    </div>
-
-    <!-- Disclaimer and Donation Address at the Bottom -->
-    <div class="disclaimer">
-      <p>Dontations in support of the PLAYA3ULL Calculator can be sent to:</p>
-      <p><strong>0x65620BB0CCBB61C123DaBC58040aDD521653dc39</strong></p>
-    </div>
-
-  </div>
-
-  <script>
-    function updateValue(id) {
-      var value = document.getElementById(id).value;
-      document.getElementById(id + 'Value').innerText = value;
-      calculateRevenue();
-    }
-
-    function calculateRevenue() {
-      var price = parseFloat(document.getElementById('price').value);
-      var nodesSold = parseInt(document.getElementById('nodesSold').value);
-      var nodesOwned = parseInt(document.getElementById('nodesOwned').value);
-      var current3ull = parseInt(document.getElementById('current3ull').value);
-      var marketplaceVolume = parseInt(document.getElementById('marketplaceVolume').value);
-      var dailyEmissionsTotal = 6849315;
-      var emissionsPerNode = dailyEmissionsTotal / nodesSold;
-      var dailyRevenuePerNode = emissionsPerNode * price;
-      var dailyRevenue = dailyRevenuePerNode * nodesOwned;
-      var total3ullValue = current3ull * price;
-      var burnRate = 0.1; // Assuming a 10% burn rate
-
-      // Revenue calculations
-      document.getElementById('dailyEmissionsTotal').innerText = dailyEmissionsTotal.toLocaleString();
-      document.getElementById('emissionsPerNode').innerText = emissionsPerNode.toFixed(4);
-      document.getElementById('totalValueEmissionsPerNode').innerText = (emissionsPerNode * price).toFixed(2);
-      document.getElementById('dailyRevenue').innerText = dailyRevenue.toFixed(2);
-      document.getElementById('weeklyRevenue').innerText = (dailyRevenue * 7).toFixed(2);
-      document.getElementById('monthlyRevenue').innerText = (dailyRevenue * 30).toFixed(2);
-      document.getElementById('yearlyRevenue').innerText = (dailyRevenue * 365).toFixed(2);
-      document.getElementById('total3ullValue').innerText = total3ullValue.toFixed(2);
-
-      // Volume calculations
-      document.getElementById('dailyVolume').innerText = marketplaceVolume.toLocaleString();
-      document.getElementById('weeklyVolume').innerText = (marketplaceVolume * 7).toLocaleString();
-      document.getElementById('monthlyVolume').innerText = (marketplaceVolume * 30).toLocaleString();
-      document.getElementById('yearlyVolume').innerText = (marketplaceVolume * 365).toLocaleString();
-
-      // Burn calculations
-      document.getElementById('dailyBurn').innerText = (marketplaceVolume * burnRate).toLocaleString();
-      document.getElementById('weeklyBurn').innerText = (marketplaceVolume * 7 * burnRate).toLocaleString();
-      document.getElementById('monthlyBurn').innerText = (marketplaceVolume * 30 * burnRate).toLocaleString();
-      document.getElementById('yearlyBurn').innerText = (marketplaceVolume * 365 * burnRate).toLocaleString();
-    }
-
-    window.onload = function() {
-      updateValue('price');
-      updateValue('nodesSold');
-      updateValue('nodesOwned');
-      updateValue('current3ull');
-      updateValue('marketplaceVolume');
-    }
-  </script>
+        // Function to sync slider with input
+        function syncSlider(inputId, sliderId) {
+            const input = document.getElementById(inputId);
+            const slider = document.getElementById(sliderId);
+            input.value = slider.value;
+            updateValues();
+        }
+    
+        // Function to update calculations and values
+        function updateValues() {
+            const price = parseFloat(document.getElementById("price").value);
+            const current3ull = parseFloat(document.getElementById("current3ull").value);
+            const nodesSold = parseInt(document.getElementById("nodesSold").value);
+            const nodesOwned = parseInt(document.getElementById("nodesOwned").value);
+            const marketplaceVolume = parseFloat(document.getElementById("marketplaceVolume").value);
+    
+            const total3ullValue = current3ull * price;
+            const dailyEmissionsTotal = nodesSold * 136.9863;
+            const emissionsPerNode = 136.9863;
+            const totalValueEmissionsPerNode = emissionsPerNode * price;
+    
+            const dailyRevenue = emissionsPerNode * price * nodesOwned;
+            const weeklyRevenue = dailyRevenue * 7;
+            const monthlyRevenue = dailyRevenue * 30;
+            const yearlyRevenue = dailyRevenue * 365;
+    
+            document.getElementById("priceValue").innerText = price.toFixed(4);
+            document.getElementById("current3ullValue").innerText = current3ull.toLocaleString();
+            document.getElementById("nodesSoldValue").innerText = nodesSold.toLocaleString();
+            document.getElementById("nodesOwnedValue").innerText = nodesOwned.toLocaleString();
+            document.getElementById("total3ullValue").innerText = total3ullValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById("dailyEmissionsTotal").innerText = dailyEmissionsTotal.toLocaleString();
+            document.getElementById("emissionsPerNode").innerText = emissionsPerNode.toFixed(4);
+            document.getElementById("totalValueEmissionsPerNode").innerText = totalValueEmissionsPerNode.toFixed(2);
+    
+            document.getElementById("dailyRevenue").innerText = dailyRevenue.toFixed(2);
+            document.getElementById("weeklyRevenue").innerText = weeklyRevenue.toFixed(2);
+            document.getElementById("monthlyRevenue").innerText = monthlyRevenue.toFixed(2);
+            document.getElementById("yearlyRevenue").innerText = yearlyRevenue.toFixed(2);
+    
+            document.getElementById("marketplaceVolumeValue").innerText = marketplaceVolume.toLocaleString();
+            document.getElementById("dailyVolume").innerText = marketplaceVolume.toLocaleString();
+            document.getElementById("weeklyVolume").innerText = (marketplaceVolume * 7).toLocaleString();
+            document.getElementById("monthlyVolume").innerText = (marketplaceVolume * 30).toLocaleString();
+            document.getElementById("yearlyVolume").innerText = (marketplaceVolume * 365).toLocaleString();
+    
+            document.getElementById("dailyBurn").innerText = (marketplaceVolume * 0.1).toLocaleString();
+            document.getElementById("weeklyBurn").innerText = (marketplaceVolume * 0.1 * 7).toLocaleString();
+            document.getElementById("monthlyBurn").innerText = (marketplaceVolume * 0.1 * 30).toLocaleString();
+            document.getElementById("yearlyBurn").innerText = (marketplaceVolume * 0.1 * 365).toLocaleString();
+        }
+    
+        // Fetch live price every 30 seconds
+        setInterval(fetchLivePrice, 30000);
+        fetchLivePrice();  // Initial fetch on page load
+    
+        // Initial calculation on page load
+        window.onload = updateValues;
+    </script>
+    
 </body>
 </html>
+
