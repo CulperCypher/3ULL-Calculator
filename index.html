@@ -120,7 +120,7 @@
     <div id="livePrice">Live 3ULL Price: $<span id="livePriceValue">...</span></div>
 
     <div class="container">
-        <h1></h1>
+        <h1>3ULL Investment Calculator</h1>
 
         <div class="card">
             <div class="input-container">
@@ -188,12 +188,48 @@
         </div>
 
         <div class="disclaimer">
-            <p>Donations in support of the PLAYA3ULL Calculator can be sent to:</p>
-            <p><strong>0x65620BB0CCBB61C123DaBC58040aDD521653dc39</strong></p>
-        </div>
-    </div>
+    <p>Donations in support of the PLAYA3ULL Calculator can be sent to:</p>
+    
+    <p>
+        <strong>0x65620BB0CCBB61C123DaBC58040aDD521653dc39</strong>
+        <button class="copy-button" onclick="copyToClipboard('0x65620BB0CCBB61C123DaBC58040aDD521653dc39')">
+            <img src="https://img.icons8.com/material-outlined/24/ffffff/copy.png" alt="Copy Icon">
+        </button>
+    </p>
+    
+    <p>
+        <strong>0xC2aA05e18C4c42563C08667df2dE79299fA5C758</strong>
+        <button class="copy-button" onclick="copyToClipboard('0xC2aA05e18C4c42563C08667df2dE79299fA5C758')">
+            <img src="https://img.icons8.com/material-outlined/24/ffffff/copy.png" alt="Copy Icon">
+        </button>
+    </p>
+</div>
+
+<style>
+    .copy-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding-left: 10px;
+        vertical-align: middle;
+    }
+    .copy-button img {
+        width: 16px;
+        height: 16px;
+    }
+</style>
+
+
+
 
     <script>
+	function copyToClipboard(address) {
+        navigator.clipboard.writeText(address).then(() => {
+            alert("Address copied to clipboard!");
+        }).catch(err => {
+            console.error("Failed to copy text: ", err);
+        });
+    }
         // Function to fetch live price
         async function fetchLivePrice() {
             try {
@@ -234,6 +270,8 @@
             const weeklyRevenue = dailyRevenue * 7;
             const monthlyRevenue = dailyRevenue * 30;
             const yearlyRevenue = dailyRevenue * 365;
+			
+			
     
             document.getElementById("priceValue").innerText = price.toFixed(4);
             document.getElementById("current3ullValue").innerText = current3ull.toLocaleString();
@@ -267,8 +305,8 @@
     
         // Initial calculation on page load
         window.onload = updateValues;
+		
     </script>
     
 </body>
 </html>
-
