@@ -4,6 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3ULL Investment Calculator</title>
+	<!DOCTYPE html>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </style>
+</head>
+<body>
+  <h1>3ULL Investment Calculator</h1>
+  <div class="container">
+    <!-- Sliders and other elements go here -->
+    
+    <!-- Existing Revenue Display Section -->
+    <p>Current Holdings Value</p>
+    <p>Your Current 3ULL: <span id="current3ull">24100000</span></p>
+    <p>Total 3ULL Value: <span id="total3ullValue">$1205000.00</span></p>
+    <p>Daily Revenue: <span id="dailyRevenue">$0.00</span></p>
+    <p>Weekly Revenue: <span id="weeklyRevenue">$0.00</span></p>
+    <p>Monthly Revenue: <span id="monthlyRevenue">$0.00</span></p>
+    <p>Yearly Revenue: <span id="yearlyRevenue">$0.00</span></p>
+    
+    <!-- Add the Chart Here -->
+    <canvas id="revenueChart" width="400" height="200"></canvas>
+
+    <!-- Disclaimer -->
+    <p>This is a free utility for entertainment purposes. This is not financial advice. If you would like to make a donation, you may send to 0x65620BB0CCBB61C123DaBC58040aDD521653dc39</p>
+  </div>
+  
+  <script>
+    // JavaScript code goes here
+  </script>
+</body>
+</html>
+
     <style>
         /* Global Styles */
         body {
@@ -219,94 +250,130 @@
     }
 </style>
 
-
-
-
-    <script>
-	function copyToClipboard(address) {
+<script>
+    function copyToClipboard(address) {
         navigator.clipboard.writeText(address).then(() => {
             alert("Address copied to clipboard!");
         }).catch(err => {
             console.error("Failed to copy text: ", err);
         });
     }
-        // Function to fetch live price
-        async function fetchLivePrice() {
-            try {
-                const response = await fetch('https://api.dexscreener.com/latest/dex/tokens/0xa77e70d0Af1Ac7fF86726740dB1Bd065c3566937');
-                const data = await response.json();
-                const priceUsd = data.pairs[0].priceUsd;
-                document.getElementById("livePriceValue").innerText = parseFloat(priceUsd).toFixed(5);
-                document.getElementById("price").value = parseFloat(priceUsd).toFixed(5); // Sync with price input
-                updateValues();
-            } catch (error) {
-                console.error("Error fetching live price:", error);
-                document.getElementById("livePriceValue").innerText = "Error";
-            }
-        }
-    
-        // Function to sync slider with input
-        function syncSlider(inputId, sliderId) {
-            const input = document.getElementById(inputId);
-            const slider = document.getElementById(sliderId);
-            input.value = slider.value;
+
+    // Function to fetch live price
+    async function fetchLivePrice() {
+        try {
+            const response = await fetch('https://api.dexscreener.com/latest/dex/tokens/0xa77e70d0Af1Ac7fF86726740dB1Bd065c3566937');
+            const data = await response.json();
+            const priceUsd = data.pairs[0].priceUsd;
+            document.getElementById("livePriceValue").innerText = parseFloat(priceUsd).toFixed(5);
+            document.getElementById("price").value = parseFloat(priceUsd).toFixed(5); // Sync with price input
             updateValues();
+        } catch (error) {
+            console.error("Error fetching live price:", error);
+            document.getElementById("livePriceValue").innerText = "Error";
         }
-    
-        // Function to update calculations and values
-        function updateValues() {
-            const price = parseFloat(document.getElementById("price").value);
-            const current3ull = parseFloat(document.getElementById("current3ull").value);
-            const nodesSold = parseInt(document.getElementById("nodesSold").value);
-            const nodesOwned = parseInt(document.getElementById("nodesOwned").value);
-            const marketplaceVolume = parseFloat(document.getElementById("marketplaceVolume").value);
-    
-            const total3ullValue = current3ull * price;
-            const dailyEmissionsTotal = nodesSold * 136.9863;
-            const emissionsPerNode = 136.9863;
-            const totalValueEmissionsPerNode = emissionsPerNode * price;
-    
-            const dailyRevenue = emissionsPerNode * price * nodesOwned;
-            const weeklyRevenue = dailyRevenue * 7;
-            const monthlyRevenue = dailyRevenue * 30;
-            const yearlyRevenue = dailyRevenue * 365;
-			
-			
-    
-            document.getElementById("priceValue").innerText = price.toFixed(4);
-            document.getElementById("current3ullValue").innerText = current3ull.toLocaleString();
-            document.getElementById("nodesSoldValue").innerText = nodesSold.toLocaleString();
-            document.getElementById("nodesOwnedValue").innerText = nodesOwned.toLocaleString();
-            document.getElementById("total3ullValue").innerText = total3ullValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById("dailyEmissionsTotal").innerText = dailyEmissionsTotal.toLocaleString();
-            document.getElementById("emissionsPerNode").innerText = emissionsPerNode.toFixed(4);
-            document.getElementById("totalValueEmissionsPerNode").innerText = totalValueEmissionsPerNode.toFixed(2);
-    
-            document.getElementById("dailyRevenue").innerText = dailyRevenue.toFixed(2);
-            document.getElementById("weeklyRevenue").innerText = weeklyRevenue.toFixed(2);
-            document.getElementById("monthlyRevenue").innerText = monthlyRevenue.toFixed(2);
-            document.getElementById("yearlyRevenue").innerText = yearlyRevenue.toFixed(2);
-    
-            document.getElementById("marketplaceVolumeValue").innerText = marketplaceVolume.toLocaleString();
-            document.getElementById("dailyVolume").innerText = marketplaceVolume.toLocaleString();
-            document.getElementById("weeklyVolume").innerText = (marketplaceVolume * 7).toLocaleString();
-            document.getElementById("monthlyVolume").innerText = (marketplaceVolume * 30).toLocaleString();
-            document.getElementById("yearlyVolume").innerText = (marketplaceVolume * 365).toLocaleString();
-    
-            document.getElementById("dailyBurn").innerText = (marketplaceVolume * 0.1).toLocaleString();
-            document.getElementById("weeklyBurn").innerText = (marketplaceVolume * 0.1 * 7).toLocaleString();
-            document.getElementById("monthlyBurn").innerText = (marketplaceVolume * 0.1 * 30).toLocaleString();
-            document.getElementById("yearlyBurn").innerText = (marketplaceVolume * 0.1 * 365).toLocaleString();
-        }
-    
-        // Fetch live price every 30 seconds
-        setInterval(fetchLivePrice, 30000);
-        fetchLivePrice();  // Initial fetch on page load
-    
-        // Initial calculation on page load
-        window.onload = updateValues;
-		
-    </script>
+    }
+
+    // Function to sync slider with input
+    function syncSlider(inputId, sliderId) {
+        const input = document.getElementById(inputId);
+        const slider = document.getElementById(sliderId);
+        input.value = slider.value;
+        updateValues();
+    }
+
+    // Chart.js initialization
+    let revenueChart;
+    function initializeChart() {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Daily', 'Weekly', 'Monthly', 'Yearly'],
+                datasets: [{
+                    label: 'Emissions Revenue (USD)',
+                    data: [],  // Initially empty; will be set in updateValues()
+                    backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                    borderColor: 'limegreen',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Function to update calculations and values
+    function updateValues() {
+        const price = parseFloat(document.getElementById("price").value);
+        const current3ull = parseFloat(document.getElementById("current3ull").value);
+        const nodesSold = parseInt(document.getElementById("nodesSold").value);
+        const nodesOwned = parseInt(document.getElementById("nodesOwned").value);
+        const marketplaceVolume = parseFloat(document.getElementById("marketplaceVolume").value);
+
+        const total3ullValue = current3ull * price;
+        const dailyEmissionsTotal = nodesSold * 136.9863;
+        const emissionsPerNode = 136.9863;
+        const totalValueEmissionsPerNode = emissionsPerNode * price;
+
+        const dailyRevenue = emissionsPerNode * price * nodesOwned;
+        const weeklyRevenue = dailyRevenue * 7;
+        const monthlyRevenue = dailyRevenue * 30;
+        const yearlyRevenue = dailyRevenue * 365;
+
+        document.getElementById("priceValue").innerText = price.toFixed(4);
+        document.getElementById("current3ullValue").innerText = current3ull.toLocaleString();
+        document.getElementById("nodesSoldValue").innerText = nodesSold.toLocaleString();
+        document.getElementById("nodesOwnedValue").innerText = nodesOwned.toLocaleString();
+        document.getElementById("total3ullValue").innerText = total3ullValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById("dailyEmissionsTotal").innerText = dailyEmissionsTotal.toLocaleString();
+        document.getElementById("emissionsPerNode").innerText = emissionsPerNode.toFixed(4);
+        document.getElementById("totalValueEmissionsPerNode").innerText = totalValueEmissionsPerNode.toFixed(2);
+
+        document.getElementById("dailyRevenue").innerText = dailyRevenue.toFixed(2);
+        document.getElementById("weeklyRevenue").innerText = weeklyRevenue.toFixed(2);
+        document.getElementById("monthlyRevenue").innerText = monthlyRevenue.toFixed(2);
+        document.getElementById("yearlyRevenue").innerText = yearlyRevenue.toFixed(2);
+
+        document.getElementById("marketplaceVolumeValue").innerText = marketplaceVolume.toLocaleString();
+        document.getElementById("dailyVolume").innerText = marketplaceVolume.toLocaleString();
+        document.getElementById("weeklyVolume").innerText = (marketplaceVolume * 7).toLocaleString();
+        document.getElementById("monthlyVolume").innerText = (marketplaceVolume * 30).toLocaleString();
+        document.getElementById("yearlyVolume").innerText = (marketplaceVolume * 365).toLocaleString();
+
+        document.getElementById("dailyBurn").innerText = (marketplaceVolume * 0.1).toLocaleString();
+        document.getElementById("weeklyBurn").innerText = (marketplaceVolume * 0.1 * 7).toLocaleString();
+        document.getElementById("monthlyBurn").innerText = (marketplaceVolume * 0.1 * 30).toLocaleString();
+        document.getElementById("yearlyBurn").innerText = (marketplaceVolume * 0.1 * 365).toLocaleString();
+
+        // Update chart data
+        updateChart(dailyRevenue, weeklyRevenue, monthlyRevenue, yearlyRevenue);
+    }
+
+    // Function to update the chart
+    function updateChart(daily, weekly, monthly, yearly) {
+        revenueChart.data.datasets[0].data = [daily, weekly, monthly, yearly];
+        revenueChart.update();
+    }
+
+    // Fetch live price every 30 seconds
+    setInterval(fetchLivePrice, 30000);
+    fetchLivePrice();  // Initial fetch on page load
+
+    // Initial calculation and chart setup on page load
+    window.onload = function() {
+        updateValues();
+        initializeChart();
+    };
+</script>
     
 </body>
 </html>
